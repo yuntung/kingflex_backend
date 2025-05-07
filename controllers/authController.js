@@ -93,18 +93,13 @@ const authController = {
     
             // 生成 Token
             const token = generateToken(user);
-            console.log('已生成token:', token ? '成功' : '失敗');
     
             // 設置 Cookie
             res.cookie('token', token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
-                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 調整sameSite設置
                 maxAge: 24 * 60 * 60 * 1000 // 24小時
             });
-            console.log('已設置cookie');
-    
-            console.log('用戶登入成功，角色:', user.role);
     
             res.json({
                 message: 'Login successfully',
@@ -117,7 +112,6 @@ const authController = {
                 }
             });
         } catch (error) {
-            console.error('登入錯誤:', error);
             res.status(500).json({ 
                 message: 'Login failed', 
                 error: error.message 
@@ -443,20 +437,16 @@ async registerAdmin(req, res) {
         // 生成 Token
         const token = generateToken({
             id: admin._id,
-            email: admin.email,
             username: admin.username,
             role: 'admin'
         });
-        console.log('已生成admin token:', token ? '成功' : '失敗');
 
         // 設置 Cookie
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 調整sameSite設置
             maxAge: 24 * 60 * 60 * 1000 // 24小時
         });
-        console.log('已設置admin cookie');
 
         res.status(201).json({
             success: true,

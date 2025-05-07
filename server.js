@@ -19,12 +19,20 @@ const productRoutes = require('./routes/productRoutes');
 app.use(helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" }
 }));  // 安全性表頭
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000", // 確保包含您的前端URL
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.originalUrl}`);
+    console.log('認證信息:', req.cookies.token ? '有token cookie' : '無token cookie');
+    next();
+});
+
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 

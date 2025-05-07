@@ -103,6 +103,7 @@ const authController = {
     
             res.json({
                 message: 'Login successfully',
+                token: token, // 新增: 在回應中也包含token
                 user: {
                     id: user._id,
                     username: user.username,

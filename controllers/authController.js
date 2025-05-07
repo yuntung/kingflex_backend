@@ -444,7 +444,8 @@ async registerAdmin(req, res) {
         // 設置 Cookie
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: true, // 確保在 HTTPS 下運行
+            sameSite: 'none', // 允許跨域請求
             maxAge: 24 * 60 * 60 * 1000 // 24小時
         });
 

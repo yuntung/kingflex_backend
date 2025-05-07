@@ -19,7 +19,9 @@ const productRoutes = require('./routes/productRoutes');
 app.use(helmet());  // 安全性表頭
 app.use(cors({
     origin: process.env.FRONTEND_URL,
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));

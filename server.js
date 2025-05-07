@@ -37,9 +37,13 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/products', productRoutes);
 
 // 資料庫連接
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('成功連接到 MongoDB'))
-    .catch((err) => console.error('MongoDB 連接失敗:', err));
+mongoose.connect(process.env.MONGODB_URI, {
+    serverSelectionTimeoutMS: 30000, // 增加到 30 秒
+    socketTimeoutMS: 45000, // 增加到 45 秒
+    connectTimeoutMS: 30000, // 增加到 30 秒
+  })
+  .then(() => console.log('成功連接到 MongoDB'))
+  .catch((err) => console.error('MongoDB 連接失敗:', err));
 
 // 基本路由測試
 app.get('/api/test', (req, res) => {

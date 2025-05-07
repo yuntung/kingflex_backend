@@ -16,13 +16,25 @@ const transporter = nodemailer.createTransport({
 });
 
 // 確保臨時目錄存在
+// const ensureTempDir = () => {
+//     const tempDir = path.resolve(__dirname, '../temp');
+//     if (!fs.existsSync(tempDir)) {
+//         fs.mkdirSync(tempDir, { recursive: true, mode: 0o755 });
+//     }
+//     return tempDir;
+// };
+
 const ensureTempDir = () => {
-    const tempDir = path.resolve(__dirname, '../temp');
+    // 在雲環境中，使用 /tmp 目錄可能更可靠
+    const tempDir = process.env.NODE_ENV === 'production' 
+      ? path.resolve('/tmp') 
+      : path.resolve(__dirname, '../temp');
+      
     if (!fs.existsSync(tempDir)) {
-        fs.mkdirSync(tempDir, { recursive: true, mode: 0o755 });
+      fs.mkdirSync(tempDir, { recursive: true, mode: 0o755 });
     }
     return tempDir;
-};
+  };
 
 // 生成訂單 PDF
 const generateOrderPDF = (order) => {

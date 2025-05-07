@@ -1,10 +1,9 @@
-// middleware/adminAuth.js
 const { verifyToken } = require('../utils/jwtUtils');
 
 const adminAuth = async (req, res, next) => {
     try {
         // 從 cookie 中獲取 token
-        const token = req.cookies.token;
+        const token = req.cookies.token || req.header('Authorization')?.replace('Bearer ', '');
         
         if (!token) {
             return res.status(401).json({ message: 'Authentication required' });
@@ -25,7 +24,8 @@ const adminAuth = async (req, res, next) => {
         req.user = decoded;
         next();
     } catch (error) {
-        res.status(401).json({ message: 'Authentication failed' });
+        console.error('Admin auth error:', error);
+        return res.status(401).json({ message: 'Authentication failed' });
     }
 };
 

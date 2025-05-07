@@ -16,10 +16,14 @@ const orderRoutes = require('./routes/orderRoutes');
 const productRoutes = require('./routes/productRoutes');
 
 // 中間件設定
-app.use(helmet());  // 安全性表頭
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" }
+}));  // 安全性表頭
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true
+    origin: process.env.FRONTEND_URL || "http://localhost:3000", // 確保包含您的前端URL
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));

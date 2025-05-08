@@ -62,6 +62,171 @@ app.use((err, req, res, next) => {
     });
 });
 
+// 引入產品模型
+const Product = require('./models/Product');
+const mongoose = require('mongoose');
+
+// 初始化產品資料的函數
+const initializeProducts = async () => {
+  try {
+    // 檢查產品數量
+    const productCount = await Product.countDocuments();
+    
+    // 如果已經有產品，則不執行初始化
+    if (productCount > 0) {
+      console.log('產品資料已存在，跳過初始化');
+      return;
+    }
+    
+    console.log('開始初始化產品資料...');
+    
+    // 獲取一個管理員 ID (從 users 集合中查詢)
+    // 務必確保使用正確的 ID
+    const adminId = '681ae6e93d86c420949adb46'; // 使用實際管理員 ID
+    
+    // 定義產品資料
+    const products = [
+      // 12.7mm 產品 (normal)
+      {
+        name: 'PC Strand',
+        detail: '12.7mm Standard',
+        unit: 'Ton',
+        type: 'normal',
+        createdBy: adminId
+      },
+      {
+        name: 'Flat Duct',
+        detail: '70 x 20 FLAT DUCTING',
+        unit: 'Rack',
+        type: 'normal',
+        createdBy: adminId
+      },
+      {
+        name: 'Anchors Block',
+        detail: '12.7mm',
+        unit: 'Box',
+        type: 'normal',
+        createdBy: adminId
+      },
+      {
+        name: 'Jack Wedge',
+        detail: '12.7mm',
+        unit: 'Set',
+        type: 'normal',
+        createdBy: adminId
+      },
+      {
+        name: 'Wedge',
+        detail: '12.7mm',
+        unit: 'Bucket',
+        type: 'normal',
+        createdBy: adminId
+      },
+      
+      // 15.2mm 產品
+      {
+        name: 'PC Strand',
+        detail: '15.2mm Standard',
+        unit: 'Ton',
+        type: '152mm',
+        createdBy: adminId
+      },
+      {
+        name: 'Flat Duct',
+        detail: '90 x 20 FLAT DUCTING',
+        unit: 'Ton',
+        type: '152mm',
+        createdBy: adminId
+      },
+      {
+        name: 'Anchors Block',
+        detail: '15.2mm',
+        unit: 'Box',
+        type: '152mm',
+        createdBy: adminId
+      },
+      {
+        name: 'Jack Wedge',
+        detail: '15.2mm',
+        unit: 'Box',
+        type: '152mm',
+        createdBy: adminId
+      },
+      {
+        name: 'Wedge',
+        detail: '15.2mm',
+        unit: 'Bucket',
+        type: '152mm',
+        createdBy: adminId
+      },
+      
+      
+      // 共用產品
+      {
+        name: 'Grout Tube',
+        detail: 'Clear & Grey',
+        unit: 'Roll',
+        type: 'shared',
+        createdBy: adminId
+      },
+      {
+        name: 'Able Flex',
+        detail: 'N/A',
+        unit: 'Roll',
+        type: 'shared',
+        createdBy: adminId
+      },
+      {
+        name: 'Duct Tape',
+        detail: 'N/A',
+        unit: 'Box',
+        type: 'shared',
+        createdBy: adminId
+      },
+      {
+        name: 'Strand Cap',
+        detail: 'N/A',
+        unit: 'Box',
+        type: 'shared',
+        createdBy: adminId
+      },
+      {
+        name: 'Strand Sleeves',
+        detail: 'N/A',
+        unit: 'Box',
+        type: 'shared',
+        createdBy: adminId
+      },
+      {
+        name: 'Plastic Pans',
+        detail: 'N/A',
+        unit: 'Crate',
+        type: 'shared',
+        createdBy: adminId
+      },
+      {
+        name: 'Hand Gloves',
+        detail: 'Size: S/M/L/XL',
+        unit: 'Box',
+        type: 'shared',
+        createdBy: adminId
+      },
+    ];
+    
+    // 插入產品資料
+    await Product.insertMany(products);
+    console.log(`已成功初始化 ${products.length} 個產品`);
+  } catch (error) {
+    console.error('初始化產品資料失敗:', error);
+  }
+};
+
+// 在資料庫連接成功後初始化產品資料
+mongoose.connection.once('open', () => {
+  console.log('已成功連接到 MongoDB');
+  initializeProducts().catch(err => console.error('初始化產品錯誤:', err));
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`伺服器運行在 port ${PORT}`);

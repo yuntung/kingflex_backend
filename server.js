@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); // 只引入一次
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
@@ -38,6 +38,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/products', productRoutes);
 
+// 引入產品模型 (移到這裡，在資料庫連接之前)
+const Product = require('./models/Product');
+
 // 資料庫連接
 mongoose.connect(process.env.MONGODB_URI, {
     serverSelectionTimeoutMS: 30000, // 增加到 30 秒
@@ -61,10 +64,6 @@ app.use((err, req, res, next) => {
         error: process.env.NODE_ENV === 'development' ? err.message : '發生錯誤'
     });
 });
-
-// 引入產品模型
-const Product = require('./models/Product');
-const mongoose = require('mongoose');
 
 // 初始化產品資料的函數
 const initializeProducts = async () => {
